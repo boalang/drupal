@@ -75,6 +75,10 @@ function fakeRunning($record) {
 	if (is_boa_admin())
 		return;
 
+	global $user;
+	if ($user !== null && $user->name == "paclab")
+		return;
+
 	if ($record->compiler_status == 2 && $record->compile_end > time()) {
 		$record->compiler_status = 1;
 		$record->hadoop_status = 0;
