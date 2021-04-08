@@ -466,6 +466,33 @@ function boa_menu() {
 		'file' => 'job.diff.inc',
 	);
 
+	$items['boa/datasets/add'] = array(
+		'title' => t('Add Boa Dataset'),
+		'weight' => -1,
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('boa_dataset_add_form'),
+		'access callback' => 'is_boa_admin',
+		'file' => 'datasets.inc',
+	);
+
+	$items['boa/datasets/%/edit'] = array(
+		'title' => t('Edit Boa Dataset'),
+		'weight' => -1,
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('boa_dataset_edit_form', 2),
+		'access callback' => 'is_boa_admin',
+		'file' => 'datasets.inc',
+	);
+
+	$items['boa/datasets'] = array(
+		'title' => t('Dataset List'),
+		'description' => t('View all input datasets.'),
+		'weight' => -1,
+		'page callback' => 'boa_dataset_list',
+		'access callback' => 'is_boa_admin',
+		'file' => 'datasets.inc',
+	);
+
 	return $items;
 }
 
