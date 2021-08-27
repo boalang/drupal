@@ -66,7 +66,7 @@ function boa_schema() {
             'run_opts' => array(
                 'description' => 'Command-line options passed to the Hadoop jar.',
                 'type' => 'varchar',
-                'length' => 255,
+                'length' => 4096,
             ),
             'compiler_path' => array(
                 'description' => 'Directory name for the Boa compiler.',
