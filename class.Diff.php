@@ -3,12 +3,12 @@
 /*
 
 class.Diff.php
-http://code.stephenmorley.org/php/diff-implementation/
+https://code.iamkate.com/php/diff-implementation/
 
 A class containing a diff implementation
 
-Created by Stephen Morley - http://stephenmorley.org/ - and released under the
-terms of the CC0 1.0 Universal legal code:
+Created by Kate Morley - http://iamkate.com/ - and released under the terms of
+the CC0 1.0 Universal legal code:
 
 http://creativecommons.org/publicdomain/zero/1.0/legalcode
 
