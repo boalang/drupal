@@ -270,12 +270,12 @@ function generate_content($jobId) {
 			$content .= '<b>Finished:</b> ' . boa_date($record->hadoop_end) . ' (' . boa_duration($record->hadoop_span) . ')<br/>';
 		if ($record->hadoop_status < 0 && strlen($record->hadoop_output)) {
 			$matches = array();
-			preg_match_all('/Caused by: (.*?)\s*\tat/s', $record->hadoop_output, $matches, PREG_SET_ORDER);
+			preg_match_all('/(map failure for key \'\d+\').*?Caused by: (.*?)\s*\tat/s', $record->hadoop_output, $matches, PREG_SET_ORDER);
 			if (count($matches)) {
 				$content .= '<pre class="output">';
 				$errs = array();
 				for ($i = 0; $i < count($matches); $i++)
-					$errs[] = trim($matches[$i][1]);
+					$errs[] = trim($matches[$i][1]) . ': ' . trim($matches[$i][2]);
 				$content .= implode("\n\n", array_unique($errs)) . '</pre>';
 			}
 		}
