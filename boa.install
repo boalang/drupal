@@ -113,7 +113,7 @@ function boa_schema() {
             'source' => array(
                 'description' => 'The source code of the query.',
                 'type' => 'text',
-                'size' => 'medium',
+                'size' => 'big',
             ),
             'created' => array(
                 'description' => 'The time the job was originally created.',
