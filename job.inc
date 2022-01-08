@@ -6,8 +6,6 @@ function boa_job($jobId) {
 	if (!isValidJob($jobId))
 		invalidJob($jobId);
 
-	drupal_set_title(t('Information for Job ') . $jobId);
-
 	$query = db_select('boa_jobs', 'j');
 	$query->join('boa_output', 'o', 'j.id = o.id');
 	$query->fields('j', array('id', 'uid', 'source', 'deleted', 'public',
@@ -38,6 +36,8 @@ function boa_job($jobId) {
 	$query2->condition('parent_id', $jobId);
 	$result2 = $query2->execute();
 
+	fakeRunning($record);
+
 	while ($record2 = $result2->fetchObject())
 		if (is_boa_admin() || ($record2->uid == $user->uid && !$record2->deleted))
 			$content .= '&rarr; modified in Job <a href="?q=boa/job/' . $record2->id . '">' . $record2->id . '</a> (<a href="?q=boa/job/' . $record2->id . '/diff/' . $jobId . '">diff</a>)<br/>';
@@ -45,11 +45,14 @@ function boa_job($jobId) {
 	if ($record->parent_id > 0)
 		$content .= '<br/>';
 
-	fakeRunning($record);
-
 	if ($record->compiler_status == 0 || $record->compiler_status == 1 ||
-			($record->compiler_status == 2 && ($record->hadoop_status == 0 || $record->hadoop_status == 1)))
+			($record->compiler_status == 2 && ($record->hadoop_status == 0 || $record->hadoop_status == 1))) {
 		$content .= '<b>Job is currently running</b> <div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div><br/>(note: this page automatically reloads)<br/><br/>';
+
+        drupal_set_title(t('Running Job ') . $jobId);
+    } else {
+        drupal_set_title(t('Information for Job ') . $jobId);
+    }
 
 	if ($record->deleted)
 		$content .= '<h2>NOTE: This job is deleted.</h2><br/>';
