@@ -42,8 +42,10 @@ function _job_output_rpc($jobId) {
 
 	if (!file_exists($path) || $record->length != filesize($path)) {
 		$tmp = tempnam("/tmp", "boa-output");
+		$tmpcrc = str_replace('boa-output', '.boa-output', $tmp) . '.crc'
 		@unlink($tmp);
-		drupal_register_shutdown_function('download_tmp_cleanup', $tmp);
+		@unlink($tmpcrc);
+		drupal_register_shutdown_function('download_tmp_cleanup', $tmp, $tmpcrc);
 
 		set_time_limit(0);
 		system("/home/hadoop/hadoop-current/bin/hadoop fs -getmerge /boa/$jobId/ $tmp");
@@ -54,6 +56,7 @@ function _job_output_rpc($jobId) {
 		}
 
 		@unlink($tmp);
+		@unlink($tmpcrc);
 
 		if (filesize($tmp) != $record->length)
 			return t('Unable to fetch output.');
@@ -86,8 +89,10 @@ function _download_job($jobId, $fallbackUrl) {
 	if ($record->hadoop_status == 2) {
 		if ($record->length > 0) {
 			$tmp = tempnam("/tmp", "boa-output");
+			$tmpcrc = str_replace('boa-output', '.boa-output', $tmp) . '.crc'
 			@unlink($tmp);
-			drupal_register_shutdown_function('download_tmp_cleanup', $tmp);
+			@unlink($tmpcrc);
+			drupal_register_shutdown_function('download_tmp_cleanup', $tmp, $tmpcrc);
 
 			set_time_limit(0);
 			system("/home/hadoop/hadoop-current/bin/hadoop fs -getmerge /boa/$jobId/ $tmp");
@@ -104,7 +109,8 @@ function _download_job($jobId, $fallbackUrl) {
 			}
 
 			fclose($file);
-			unlink($tmp);
+			@unlink($tmp);
+			@unlink($tmpcrc);
 
 			drupal_exit();
 		}
@@ -119,8 +125,9 @@ function _download_job($jobId, $fallbackUrl) {
 	drupal_exit();
 }
 
-function download_tmp_cleanup($tmp) {
+function download_tmp_cleanup($tmp, $tmpcrc) {
 	@unlink($tmp);
+	@unlink($tmpcrc);
 }
 
 ?>
