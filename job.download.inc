@@ -42,7 +42,7 @@ function _job_output_rpc($jobId) {
 
 	if (!file_exists($path) || $record->length != filesize($path)) {
 		$tmp = tempnam("/tmp", "boa-output");
-		$tmpcrc = str_replace('boa-output', '.boa-output', $tmp) . '.crc'
+		$tmpcrc = str_replace('boa-output', '.boa-output', $tmp) . '.crc';
 		@unlink($tmp);
 		@unlink($tmpcrc);
 		drupal_register_shutdown_function('download_tmp_cleanup', $tmp, $tmpcrc);
@@ -89,7 +89,7 @@ function _download_job($jobId, $fallbackUrl) {
 	if ($record->hadoop_status == 2) {
 		if ($record->length > 0) {
 			$tmp = tempnam("/tmp", "boa-output");
-			$tmpcrc = str_replace('boa-output', '.boa-output', $tmp) . '.crc'
+			$tmpcrc = str_replace('boa-output', '.boa-output', $tmp) . '.crc';
 			@unlink($tmp);
 			@unlink($tmpcrc);
 			drupal_register_shutdown_function('download_tmp_cleanup', $tmp, $tmpcrc);
