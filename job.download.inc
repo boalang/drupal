@@ -21,6 +21,8 @@ function _job_output_rpc($jobId) {
 	if (!isValidJob($jobId))
 		invalidJob($jobId);
 
+	set_time_limit(0);
+
 	$query = db_select('boa_jobs', 'r');
 	$query->join('boa_output', 'o', 'r.id = o.id');
 	$query->addExpression('COALESCE(o.hash, \'\')', 'hash');
@@ -29,7 +31,7 @@ function _job_output_rpc($jobId) {
 
 	$record = $query->execute()->fetchObject();
 
-	if (strlen($record->hash) == 0)
+	if (strlen($record->hash) == 0 || $record->length < 1)
 		return t('The job has no output.');
 
 	$dstdir = $jobId . '/' . $record->hash;
@@ -46,9 +48,15 @@ function _job_output_rpc($jobId) {
 		set_time_limit(0);
 		system("/home/hadoop/hadoop-current/bin/hadoop fs -getmerge /boa/$jobId/ $tmp");
 
-		@mkdir($dir, 0700, true);
-		rename($tmp, $path);
+		if (filesize($tmp) == $record->length) {
+			@mkdir($dir, 0700, true);
+			rename($tmp, $path);
+		}
+
 		@unlink($tmp);
+
+		if (filesize($tmp) != $record->length)
+			return t('Unable to fetch output.');
 	}
 
 	return "http://boa.cs.iastate.edu/boa/output/$dstdir/$filename";
