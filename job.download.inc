@@ -17,8 +17,8 @@ function _job_output_size_rpc($jobId) {
 	return $record->length;
 }
 
-function _job_output_rpc($jobId) {
-	if (!isValidJob($jobId))
+function _job_output_rpc($jobId, $public) {
+	if (!$public && !isValidJob($jobId))
 		invalidJob($jobId);
 
 	set_time_limit(0);
@@ -70,11 +70,11 @@ function _job_output_rpc($jobId) {
 }
 
 function boa_job_download($jobId) {
-	_download_job($jobId, "boa/job/$jobId");
+	_download_job($jobId, "boa/job/$jobId", false);
 }
 
-function _download_job($jobId, $fallbackUrl) {
-	$res = _job_output_rpc($jobId);
+function _download_job($jobId, $fallbackUrl, $public) {
+	$res = _job_output_rpc($jobId, $public);
 
 	drupal_set_title(t('Output for Job ') . $jobId);
 
