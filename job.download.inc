@@ -96,6 +96,16 @@ function _download_job($jobId, $fallbackUrl) {
 
 			set_time_limit(0);
 			system("/home/hadoop/hadoop-current/bin/hadoop fs -getmerge /boa/$jobId/ $tmp");
+
+			if (filesize($tmp) != $record->length) {
+				@unlink($tmp);
+				@unlink($tmpcrc);
+
+				drupal_set_message(t('There was a problem getting the output. Try again later, or contact support.'), 'error');
+				drupal_goto($fallbackUrl);
+				drupal_exit();
+			}
+
 			$file = fopen($tmp, 'r');
 
 			drupal_add_http_header('Content-Type', 'text; utf-8');
