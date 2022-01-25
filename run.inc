@@ -12,6 +12,7 @@ function _get_datasets() {
 function boa_run_form($form, &$form_state) {
 	global $examples, $example_options;
 	global $base_path;
+	global $user;
 
 	drupal_add_js($base_path . 'sites/all/libraries/ace/src/ace.js');
 	drupal_add_js($base_path . 'sites/all/libraries/ace/src/ext-language_tools.js');
@@ -127,6 +128,56 @@ JAVASCRIPT
 	$result = _get_datasets();
 	foreach ($result as $record)
 		$form['input']['#options'][$record->id] = $record->name;
+
+	if (is_boa_admin()) {
+		$form['releaseonly'] = array(
+			'#type' => 'checkbox',
+			'#title' => t('Show Released Datasets Only'),
+		);
+		$form['checkfilter'] = array(
+			'#markup' => <<<JAVASCRIPT
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var datasetCache = [];
+
+function filterAdmin() {
+	var opt, sel = document.getElementsByName('input')[0];
+	if (!document.getElementsByName('releaseonly')[0].checked) {
+		restoreDatasets();
+	} else {
+		// Loop backwards through options as removing them modifies the next
+		// to be visited if go forwards
+		for (var i=sel.options.length-1; i>=0; i--) {
+			opt = sel.options[i];
+			if (opt.text.toLowerCase().indexOf('[admin] ') == 0){
+				sel.removeChild(opt)
+			}
+		}
+	}
+	sel.selectedIndex = 0;
+}
+
+function restoreDatasets() {
+	var sel = document.getElementsByName('input')[0];
+	sel.options.length = 0;
+	for (var i = 0, iLen = datasetCache.length; i < iLen; i++) {
+		sel.appendChild(datasetCache[i]);
+	}
+}
+
+window.onload = function() {
+	var sel = document.getElementsByName('input')[0];
+	for (var i = 0, iLen = sel.options.length; i < iLen; i++) {
+		datasetCache.push(sel.options[i]);
+	}
+	var check = document.getElementsByName('releaseonly')[0];
+	check.onclick = filterAdmin;
+}
+//--><!]]>
+</script>
+JAVASCRIPT
+);
+	}
 
 	$form['run'] = array(
 		'#type' => 'submit',
