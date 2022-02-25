@@ -234,6 +234,11 @@ function boa_schema() {
                 'description' => 'First part of the output, to display on the web.',
                 'type' => 'text',
             ),
+            'cacheid' => array(
+                'description' => 'Job ID of job this one cached from, if any.',
+                'type' => 'int',
+                'size' => 'big',
+            ),
         ),
     );
 

@@ -10,6 +10,8 @@ function boa_job($jobId) {
 	$query->join('boa_output', 'o', 'j.id = o.id');
 	$query->fields('j', array('id', 'uid', 'source', 'deleted', 'public',
 		'compiler_output', 'compiler_status', 'hadoop_status', 'parent_id'));
+	if (is_boa_admin())
+		$query->fields('o', array('cacheid'));
 	$query->addExpression('(SELECT name FROM boa_input WHERE id = j.input)', 'name');
 	$query->addExpression('COALESCE(o.length, 0)', 'length');
 	$query->addExpression('unix_timestamp(created)', 'created');
@@ -42,7 +44,10 @@ function boa_job($jobId) {
 		if (is_boa_admin() || ($record2->uid == $user->uid && !$record2->deleted))
 			$content .= '&rarr; modified in Job <a href="?q=boa/job/' . $record2->id . '">' . $record2->id . '</a> (<a href="?q=boa/job/' . $record2->id . '/diff/' . $jobId . '">diff</a>)<br/>';
 
-	if ($record->parent_id > 0)
+	if (is_boa_admin() && int($record->cacheid) > 0)
+		$content .= '&rarr; result cached from Job <a href="?q=boa/job/' . $record->cacheid . '">' . $record->cacheid . '</a><br/>';
+
+	if (strlen($content) > 0)
 		$content .= '<br/>';
 
 	if ($record->compiler_status == 0 || $record->compiler_status == 1 ||
