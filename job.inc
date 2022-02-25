@@ -44,7 +44,7 @@ function boa_job($jobId) {
 		if (is_boa_admin() || ($record2->uid == $user->uid && !$record2->deleted))
 			$content .= '&rarr; modified in Job <a href="?q=boa/job/' . $record2->id . '">' . $record2->id . '</a> (<a href="?q=boa/job/' . $record2->id . '/diff/' . $jobId . '">diff</a>)<br/>';
 
-	if (is_boa_admin() && int($record->cacheid) > 0)
+	if (is_boa_admin() && (int)$record->cacheid > 0)
 		$content .= '&rarr; result cached from Job <a href="?q=boa/job/' . $record->cacheid . '">' . $record->cacheid . '</a><br/>';
 
 	if (strlen($content) > 0)
