@@ -66,7 +66,7 @@ function _job_output_rpc($jobId, $public) {
 		}
 	}
 
-	return "http://boa.cs.iastate.edu/boa/output/$dstdir/$filename";
+	return "https://boa.cs.iastate.edu/boa/output/$dstdir/$filename";
 }
 
 function boa_job_download($jobId) {
