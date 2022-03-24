@@ -88,24 +88,24 @@ function boa_dataset_edit_form($form, &$form_state, $input_id) {
 	$result = $query->execute();
 	$record = $result->fetchObject();
 
-	$f['name']['#value'] = $record->name;
-	$f['path']['#value'] = $record->path;
-	$f['compilerpath']['#value'] = $record->compiler_path;
-	$f['opts']['#value'] = $record->run_opts;
-	$f['enabled']['#value'] = $record->enabled;
+	$f['name']['#default_value'] = $record->name;
+	$f['path']['#default_value'] = $record->path;
+	$f['compilerpath']['#default_value'] = $record->compiler_path;
+	$f['opts']['#default_value'] = $record->run_opts;
+	$f['enabled']['#default_value'] = $record->enabled;
 
 	return $f;
 }
 
 function boa_dataset_edit_form_validate($form, &$form_state) {
-	if (isset($form_state['values']['path'])) {
+	if (strlen($form_state['values']['path']) > 0) {
 		$path = $form_state['values']['path'];
 		$out = system('/home/hadoop/hadoop-current/bin/hadoop fs -ls /repcache/' . escapeshellcmd($path) . '/projects.seq > /dev/null', $retval);
 		if ($retval != 0)
 			form_set_error('path', t('HDFS Folder Name ') . "'$path'" . t(' does not exist or is not a valid input dataset.'));
 	}
 
-	if (isset($form_state['values']['compilerpath'])) {
+	if (strlen($form_state['values']['compilerpath']) > 0) {
 		$compiler_path = $form_state['values']['compilerpath'];
 		if (!is_dir('/home/boa/compiler/' . $compiler_path))
 			form_set_error('compilerpath', t('Compiler Folder Name ') . "'$compiler_path'" . t(' does not exist.'));
@@ -117,15 +117,15 @@ function boa_dataset_edit_form_validate($form, &$form_state) {
 }
 
 function boa_dataset_edit_form_submit($form, &$form_state) {
-	$input_id = (int)$form_state['input']['id'];
+	$input_id = (int)$form_state['values']['id'];
 
 	$query = db_update('boa_input');
 	$query->fields(array(
-		'name' => $form_state['input']['name'],
-		'path' => isset($form_state['input']['path']) ? $form_state['input']['path'] : NULL,
-		'run_opts' => isset($form_state['input']['opts']) ? $form_state['input']['opts'] : NULL,
-		'compiler_path' => isset($form_state['input']['compiler_path']) ? $form_state['input']['compiler_path'] : NULL,
-		'enabled' => isset($form_state['input']['enabled']) ? (int)$form_state['input']['enabled'] : 0,
+		'name' => $form_state['values']['name'],
+		'path' => strlen($form_state['values']['path']) > 0 ? $form_state['values']['path'] : NULL,
+		'run_opts' => $form_state['values']['opts'],
+		'compiler_path' => strlen($form_state['values']['compilerpath']) > 0 ? $form_state['values']['compilerpath'] : NULL,
+		'enabled' => isset($form_state['values']['enabled']) ? (int)$form_state['values']['enabled'] : 0,
 	));
 	$query->condition('id', $input_id);
 	$query->execute();
