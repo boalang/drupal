@@ -24,7 +24,7 @@ function get_dataset_form() {
 	);
 	$form['enabled'] = array(
 		'#type' => 'checkbox',
-		'#title' => t('Enabled'),
+		'#title' => t('Release dataset to users'),
 		'#default_value' => NULL,
 	);
 	$form['submit'] = array(
@@ -166,7 +166,7 @@ function boa_dataset_list() {
 			'descending' => true,
 		),
 		array(
-			'data' => t('Enabled'),
+			'data' => t('Released'),
 			'field' => 'enabled',
 			'descending' => true,
 		),
