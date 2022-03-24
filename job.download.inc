@@ -66,7 +66,10 @@ function _job_output_rpc($jobId, $public) {
 		}
 	}
 
-	return "https://boa.cs.iastate.edu/boa/output/$dstdir/$filename";
+	$proto = "http";
+	if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
+		$proto = "https";
+	return "$proto://$_SERVER[HTTP_HOST]/boa/output/$dstdir/$filename";
 }
 
 function boa_job_download($jobId) {
