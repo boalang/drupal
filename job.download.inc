@@ -41,7 +41,7 @@ function _job_output_rpc($jobId, $public) {
 	$dstdir = $jobId . '/' . $record->hash;
 	$filename = "boa-job$jobId-output.txt";
 
-	$dir = '/home/boa/www/boa/output/' . $dstdir;
+	$dir = boa_path_get('output_path') . '/' . $dstdir;
 	$path = $dir . '/' . $filename;
 
 	if (!file_exists($path) || $record->length != filesize($path)) {
@@ -52,7 +52,7 @@ function _job_output_rpc($jobId, $public) {
 		drupal_register_shutdown_function('download_tmp_cleanup', $tmp, $tmpcrc);
 
 		set_time_limit(0);
-		system("/home/hadoop/hadoop-current/bin/hadoop fs -getmerge /boa/$jobId/ $tmp");
+		system(hadoop_exec_path() . " fs -getmerge /boa/$jobId/ $tmp");
 
 		if (filesize($tmp) == $record->length) {
 			@mkdir($dir, 0700, true);

@@ -23,7 +23,7 @@ function _job_resubmit($jobId) {
 	$query->condition('id', $jobId);
 	$query->execute();
 
-	@system("/home/hadoop/hadoop-current/bin/hadoop fs -rmr /boa/$jobId/");
+	@system(hadoop_exec_path() . " fs -rmr /boa/$jobId/");
 }
 
 function boa_job_resubmit($jobId) {

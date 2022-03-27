@@ -1,5 +1,75 @@
 <?php
 
+function boa_variable_get($var) {
+	$defaults = array(
+		'hadoop_path' => '/home/hadoop/hadoop-current',
+		'compiler_path' => '/home/boa/compiler',
+		'output_path' => '/home/boa/www/boa/output',
+	);
+	return variable_get($var, $defaults[$var]);
+}
+
+function boa_path_get($var) {
+	$path = boa_variable_get($var);
+	if (substr($path, -1) != '/') $path.= '/';
+	return realpath($path);
+}
+
+function hadoop_exec_path() {
+	return boa_path_get('hadoop_path') . '/bin/hadoop';
+}
+
+function boa_config_form($form, &$form_state) {
+	$form['#tree'] = TRUE;
+
+	$form['hadoop_path'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Path to Hadoop install'),
+		'#default_value' => boa_variable_get('hadoop_path'),
+		'#size' => 50,
+		'#maxlength' => 200,
+		'#description' => t('The path to the Hadoop installation. This should contain a bin/ directory underneath it.'),
+		'#required' => TRUE,
+	);
+	$form['compiler_path'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Path to Boa compilers'),
+		'#default_value' => boa_variable_get('compiler_path'),
+		'#size' => 50,
+		'#maxlength' => 200,
+		'#description' => t('The path to the directory that contains all Boa compilers for each dataset.'),
+		'#required' => TRUE,
+	);
+	$form['output_path'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Path to Boa output'),
+		'#default_value' => boa_variable_get('output_path'),
+		'#size' => 50,
+		'#maxlength' => 200,
+		'#description' => t('The path where Boa output files are written to, so users can download them.'),
+		'#required' => TRUE,
+	);
+
+	return system_settings_form($form);
+}
+
+function boa_config_form_validate($form, &$form_state) {
+	if (realpath($form_state['values']['hadoop_path']) === false)
+		form_set_error('hadoop_path', t('Path does not exist.'));
+
+	if (realpath($form_state['values']['compiler_path']) === false)
+		form_set_error('compiler_path', t('Path does not exist.'));
+	if (realpath(realpath($form_state['values']['hadoop_path']) . '/bin/hadoop') === false)
+		form_set_error('hadoop_path', t('Could not find \'bin/hadoop\' executable at this path.'));
+	if (is_executable(realpath(realpath($form_state['values']['hadoop_path']) . '/bin/hadoop')) === false)
+		form_set_error('hadoop_path', t('The file \'bin/hadoop\' is not executable under this path.'));
+
+	if (realpath($form_state['values']['output_path']) === false)
+		form_set_error('output_path', t('Path does not exist.'));
+	if (is_writable(realpath($form_state['values']['output_path'])) === false)
+		form_set_error('output_path', t('The output directory is not writable.'));
+}
+
 function is_boa_admin() {
 	global $user;
 	return in_array('administrator', $user->roles) || in_array('boa_admin', $user->roles);
@@ -491,6 +561,15 @@ function boa_menu() {
 		'page callback' => 'boa_dataset_list',
 		'access callback' => 'is_boa_admin',
 		'file' => 'datasets.inc',
+	);
+
+	$items['admin/config/boa'] = array(
+		'title' => 'Boa Settings',
+		'description' => 'Configuration for Boa module',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('boa_config_form'),
+		'access arguments' => array('access administration pages'),
+		'type' => MENU_NORMAL_ITEM,
 	);
 
 	return $items;

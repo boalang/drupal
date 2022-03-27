@@ -24,7 +24,7 @@ function boa_job_status($jobId) {
 		}
 
 		set_time_limit(0);
-		exec("/home/hadoop/hadoop-current/bin/hadoop job -status ${matches[1]}", $out);
+		exec(hadoop_exec_path() . " job -status ${matches[1]}", $out);
 
 		return '<pre>' . implode("\n", array_splice($out, 4)) . '</pre>';
 	}

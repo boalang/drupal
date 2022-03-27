@@ -44,16 +44,17 @@ function boa_dataset_add_form($form, &$form_state) {
 
 function boa_dataset_add_form_validate($form, &$form_state) {
 	$path = $form_state['values']['path'];
-	$out = system('/home/hadoop/hadoop-current/bin/hadoop fs -ls /repcache/' . escapeshellcmd($path) . '/projects.seq > /dev/null', $retval);
+	$out = system(hadoop_exec_path() . ' fs -ls /repcache/' . escapeshellcmd($path) . '/projects.seq > /dev/null', $retval);
 	if ($retval != 0)
 		form_set_error('path', t('HDFS Folder Name ') . "'$path'" . t(' does not exist or is not a valid input dataset.'));
 
+	$compiler_base = boa_variable_get('compiler_path') . '/';
 	$compiler_path = $form_state['values']['compilerpath'];
-	if (!is_dir('/home/boa/compiler/' . $compiler_path))
+	if (!is_dir($compiler_base . $compiler_path))
 		form_set_error('compilerpath', t('Compiler Folder Name ') . "'$compiler_path'" . t(' does not exist.'));
-	else if (!is_file('/home/boa/compiler/' . $compiler_path . '/dist/boa-runtime.jar'))
+	else if (!is_file($compiler_base . $compiler_path . '/dist/boa-runtime.jar'))
 		form_set_error('compilerpath', t('Compiler Folder Name ') . "'$compiler_path'" . t(' does not contain a runtime JAR.'));
-	else if (!is_file('/home/boa/compiler/' . $compiler_path . '/dist/boa-compiler.jar'))
+	else if (!is_file($compiler_base . $compiler_path . '/dist/boa-compiler.jar'))
 		form_set_error('compilerpath', t('Compiler Folder Name ') . "'$compiler_path'" . t(' does not contain a compiler JAR.'));
 }
 
@@ -100,18 +101,19 @@ function boa_dataset_edit_form($form, &$form_state, $input_id) {
 function boa_dataset_edit_form_validate($form, &$form_state) {
 	if (strlen($form_state['values']['path']) > 0) {
 		$path = $form_state['values']['path'];
-		$out = system('/home/hadoop/hadoop-current/bin/hadoop fs -ls /repcache/' . escapeshellcmd($path) . '/projects.seq > /dev/null', $retval);
+		$out = system(hadoop_exec_path() . ' fs -ls /repcache/' . escapeshellcmd($path) . '/projects.seq > /dev/null', $retval);
 		if ($retval != 0)
 			form_set_error('path', t('HDFS Folder Name ') . "'$path'" . t(' does not exist or is not a valid input dataset.'));
 	}
 
 	if (strlen($form_state['values']['compilerpath']) > 0) {
+		$compiler_base = boa_variable_get('compiler_path') . '/';
 		$compiler_path = $form_state['values']['compilerpath'];
-		if (!is_dir('/home/boa/compiler/' . $compiler_path))
+		if (!is_dir($compiler_base . $compiler_path))
 			form_set_error('compilerpath', t('Compiler Folder Name ') . "'$compiler_path'" . t(' does not exist.'));
-		else if (!is_file('/home/boa/compiler/' . $compiler_path . '/dist/boa-runtime.jar'))
+		else if (!is_file($compiler_base . $compiler_path . '/dist/boa-runtime.jar'))
 			form_set_error('compilerpath', t('Compiler Folder Name ') . "'$compiler_path'" . t(' does not contain a runtime JAR.'));
-		else if (!is_file('/home/boa/compiler/' . $compiler_path . '/dist/boa-compiler.jar'))
+		else if (!is_file($compiler_base . $compiler_path . '/dist/boa-compiler.jar'))
 			form_set_error('compilerpath', t('Compiler Folder Name ') . "'$compiler_path'" . t(' does not contain a compiler JAR.'));
 	}
 }
