@@ -5,6 +5,7 @@ function boa_variable_get($var) {
 		'hadoop_path' => '/home/hadoop/hadoop-current',
 		'compiler_path' => '/home/boa/compiler',
 		'output_path' => '/home/boa/www/boa/output',
+		'output_path_url' => 'boa/output',
 	);
 	return variable_get('boa_' . $var, $defaults[$var]);
 }
@@ -47,6 +48,15 @@ function boa_config_form($form, &$form_state) {
 		'#size' => 50,
 		'#maxlength' => 200,
 		'#description' => t('The path where Boa output files are written to, so users can download them.'),
+		'#required' => TRUE,
+	);
+	$form['boa_output_path_url'] = array(
+		'#type' => 'textfield',
+		'#title' => t('URL to Boa output'),
+		'#default_value' => boa_variable_get('output_path_url'),
+		'#size' => 50,
+		'#maxlength' => 200,
+		'#description' => t('The URL where Boa output files are (relative to the root), so users can download them.'),
 		'#required' => TRUE,
 	);
 

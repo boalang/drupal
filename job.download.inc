@@ -69,7 +69,8 @@ function _job_output_rpc($jobId, $public) {
 	$proto = "http";
 	if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
 		$proto = "https";
-	return "$proto://$_SERVER[HTTP_HOST]/boa/output/$dstdir/$filename";
+	$outputpath = boa_variable_get('output_path_url');
+	return "$proto://$_SERVER[HTTP_HOST]/$outputpath/$dstdir/$filename";
 }
 
 function boa_job_download($jobId) {
