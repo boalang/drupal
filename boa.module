@@ -6,7 +6,7 @@ function boa_variable_get($var) {
 		'compiler_path' => '/home/boa/compiler',
 		'output_path' => '/home/boa/www/boa/output',
 	);
-	return variable_get($var, $defaults[$var]);
+	return variable_get('boa_' . $var, $defaults[$var]);
 }
 
 function boa_path_get($var) {
@@ -22,7 +22,7 @@ function hadoop_exec_path() {
 function boa_config_form($form, &$form_state) {
 	$form['#tree'] = TRUE;
 
-	$form['hadoop_path'] = array(
+	$form['boa_hadoop_path'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Path to Hadoop install'),
 		'#default_value' => boa_variable_get('hadoop_path'),
@@ -31,7 +31,7 @@ function boa_config_form($form, &$form_state) {
 		'#description' => t('The path to the Hadoop installation. This should contain a bin/ directory underneath it.'),
 		'#required' => TRUE,
 	);
-	$form['compiler_path'] = array(
+	$form['boa_compiler_path'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Path to Boa compilers'),
 		'#default_value' => boa_variable_get('compiler_path'),
@@ -40,7 +40,7 @@ function boa_config_form($form, &$form_state) {
 		'#description' => t('The path to the directory that contains all Boa compilers for each dataset.'),
 		'#required' => TRUE,
 	);
-	$form['output_path'] = array(
+	$form['boa_output_path'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Path to Boa output'),
 		'#default_value' => boa_variable_get('output_path'),
@@ -54,20 +54,20 @@ function boa_config_form($form, &$form_state) {
 }
 
 function boa_config_form_validate($form, &$form_state) {
-	if (realpath($form_state['values']['hadoop_path']) === false)
-		form_set_error('hadoop_path', t('Path does not exist.'));
+	if (realpath($form_state['values']['boa_hadoop_path']) === false)
+		form_set_error('boa_hadoop_path', t('Path does not exist.'));
 
-	if (realpath($form_state['values']['compiler_path']) === false)
-		form_set_error('compiler_path', t('Path does not exist.'));
-	if (realpath(realpath($form_state['values']['hadoop_path']) . '/bin/hadoop') === false)
-		form_set_error('hadoop_path', t('Could not find \'bin/hadoop\' executable at this path.'));
-	if (is_executable(realpath(realpath($form_state['values']['hadoop_path']) . '/bin/hadoop')) === false)
-		form_set_error('hadoop_path', t('The file \'bin/hadoop\' is not executable under this path.'));
+	if (realpath($form_state['values']['boa_compiler_path']) === false)
+		form_set_error('boa_compiler_path', t('Path does not exist.'));
+	if (realpath(realpath($form_state['values']['boa_hadoop_path']) . '/bin/hadoop') === false)
+		form_set_error('boa_hadoop_path', t('Could not find \'bin/hadoop\' executable at this path.'));
+	if (is_executable(realpath(realpath($form_state['values']['boa_hadoop_path']) . '/bin/hadoop')) === false)
+		form_set_error('boa_hadoop_path', t('The file \'bin/hadoop\' is not executable under this path.'));
 
-	if (realpath($form_state['values']['output_path']) === false)
-		form_set_error('output_path', t('Path does not exist.'));
-	if (is_writable(realpath($form_state['values']['output_path'])) === false)
-		form_set_error('output_path', t('The output directory is not writable.'));
+	if (realpath($form_state['values']['boa_output_path']) === false)
+		form_set_error('boa_output_path', t('Path does not exist.'));
+	if (is_writable(realpath($form_state['values']['boa_output_path'])) === false)
+		form_set_error('boa_output_path', t('The output directory is not writable.'));
 }
 
 function is_boa_admin() {
