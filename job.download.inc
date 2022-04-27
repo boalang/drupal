@@ -59,7 +59,7 @@ function _job_output_rpc($jobId, $public) {
 			rename($tmp, $path);
 			@unlink($tmp);
 			@unlink($tmpcrc);
-		} else if (filesize($tmp) != $record->length) {
+		} else {
 			@unlink($tmp);
 			@unlink($tmpcrc);
 			return t('There was a problem getting the output. Try again later, or contact support.');
