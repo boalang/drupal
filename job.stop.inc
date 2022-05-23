@@ -32,7 +32,7 @@ function boa_job_stop_submit($form, &$form_state) {
 	drupal_exit();
 }
 
-function _boa_stop_rpc($jobId) {
+function _job_stop_rpc($jobId) {
 	if (!isValidJob($jobId))
 		services_erorr(t('Invalid job :jobid or this job does not belong to you.', array(':jobid' => $jobId)), 403);
 	else
