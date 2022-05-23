@@ -38,7 +38,7 @@ function _job_stop_rpc($jobId) {
 	else
 		_boa_stop_job($jobId);
 
-	drupal_exit();
+	return true;
 }
 
 ?>
