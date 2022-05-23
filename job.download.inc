@@ -62,7 +62,7 @@ function _job_output_rpc($jobId, $public) {
 		} else {
 			@unlink($tmp);
 			@unlink($tmpcrc);
-			return t('There was a problem getting the output. Try again later, or contact support.');
+			return t('There was a problem getting the output (expected: ' . $record->length . ', found: ' . filesize($tmp) . '). Try again later, or contact support.');
 		}
 	}
 
