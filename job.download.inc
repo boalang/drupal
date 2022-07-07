@@ -1,5 +1,22 @@
 <?php
 
+function _job_output_hash_rpc($jobId) {
+	if (!isValidJob($jobId))
+		invalidJob($jobId);
+
+	$query = db_select('boa_output', 'o');
+	$query->condition('o.id', $jobId);
+	$query->fields('o', array('hash'));
+	$query->addExpression('LENGTH(o.web_result)', 'length');
+
+	$result = $query->execute();
+	if ($result->rowCount() == 0)
+		return 0;
+
+	$record = $result->fetchObject();
+	return array($record->length, $record->hash);
+}
+
 function _job_output_size_rpc($jobId) {
 	if (!isValidJob($jobId))
 		invalidJob($jobId);
