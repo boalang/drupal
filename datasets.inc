@@ -193,7 +193,7 @@ function boa_dataset_list() {
 			$data->name,
 			$data->path,
 			$data->compiler_path,
-			$data->run_opts,
+			'<div style="-ms-word-break: break-all; word-break: break-all; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; hyphens: auto;">' . $data->run_opts . '</div>',
 			$data->enabled ? 'Yes' : 'NO',
 			"[<a href=\"?q=boa/datasets/{$data->id}/edit\">" . t('edit') . '</a>]',
 		);
@@ -203,7 +203,6 @@ function boa_dataset_list() {
 		'rows' => $rows,
 		'attributes' => array('width' => '100%'),
 		'sticky' => true,
-		'caption' => NULL,
 		'colgroups' => array(),
 		'caption' => '<a href="index.php?q=boa/datasets/add">' . t('Add a dataset') . '</a>',
 		'empty' => t('No datasets exist yet.'),
