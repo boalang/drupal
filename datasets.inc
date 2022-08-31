@@ -5,25 +5,25 @@ function get_dataset_form() {
 		'#type' => 'textfield',
 		'#title' => t('Dataset Name'),
 		'#size' => 60,
-		'#maxlength' = > 50,
+		'#maxlength' => 50,
 		'#required' => TRUE,
 	);
 	$form['path'] = array(
 		'#type' => 'textfield',
 		'#title' => t('HDFS Folder Name'),
-		'#maxlength' = > 255,
+		'#maxlength' => 255,
 		'#size' => 60,
 	);
 	$form['compilerpath'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Compiler Folder Name'),
-		'#maxlength' = > 255,
+		'#maxlength' => 255,
 		'#size' => 60,
 	);
 	$form['opts'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Runtime Arguments'),
-		'#maxlength' = > 4096,
+		'#maxlength' => 4096,
 		'#size' => 60,
 	);
 	$form['enabled'] = array(
