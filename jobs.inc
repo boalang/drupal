@@ -3,9 +3,14 @@
 function _job_rpc($id) {
 	global $user;
 
-	$uid = $user->uid;
-	if (is_boa_admin()) $uid = 0;
-	$query = jobs_query($uid);
+	$query = jobs_query(0);
+
+	if (!is_boa_admin())
+		$query->condition(db_or()
+			->condition('j.uid', $user->uid)
+			->condition('j.public', true)
+		);
+
 	$query->condition('j.id', $id);
 
 	$result = $query->execute();
