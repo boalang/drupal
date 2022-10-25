@@ -17,7 +17,6 @@ function _job_public_rpc($jobId) {
 
 	$query = db_select('boa_jobs', 'j');
 	$query->fields('j', array('public'));
-	$query->condition('j.uid', $user->uid);
 	$query->condition('j.id', $jobId);
 
 	$result = $query->execute();
