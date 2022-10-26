@@ -57,7 +57,7 @@ function jobs_query($uid) {
 	$query->addExpression('substring_index(source, \'\n\', 20)', 'source');
 	$query->addExpression('unix_timestamp(compile_end)', 'compile_end');
 	$query->addExpression('unix_timestamp(hadoop_end)', 'hadoop_end');
-	if ($uid > 0)
+	if ($uid > 0 && !is_boa_admin())
 		$query->condition('j.uid', $uid);
 	if (!is_boa_admin() || !isset($_GET['deleted']) || !$_GET['deleted'])
 		$query->condition('deleted', false);
