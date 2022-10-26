@@ -187,7 +187,10 @@ function isValidJob($jobId) {
 	$query = db_select('boa_jobs', 'r');
 	$query->fields('r', array('id'));
 	if (!is_boa_admin()) {
-		$query->condition('uid', $user->uid);
+		$query->condition(db_or()
+			->condition('uid', $user->uid)
+			->condition('public', true)
+		);
 		$query->condition('deleted', 0);
 	}
 	$query->condition('id', $jobId);
