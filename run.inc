@@ -122,7 +122,7 @@ JAVASCRIPT
 	$form['input'] = array(
 		'#type' => 'select',
 		'#title' => t('Input Dataset (use the SMALL dataset when testing queries!)'),
-		'#default_value' => isset($form['input']['#default_value']) ? $form['input']['#default_value'] : 0
+		'#default_value' => isset($form['input']['#default_value']) ? $form['input']['#default_value'] : (isset($_GET['source']) ? $form['source']['#default_value'] = (int)$_GET['source'] : 0)
 	);
 
 	$result = _get_datasets();
