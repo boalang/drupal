@@ -102,7 +102,7 @@ function _print_row($row) {
 			$content .= '<b>';
 		else if ($i <= $keycount)
 			$content .= '<i>';
-		$content .= htmlspecialchars($col);
+		$content .= preg_replace('/((http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?)/', '<a target="_blank" href="\1">\1</a>', htmlspecialchars($col));
 		if ($i == 0)
 			$content .= '</b>';
 		else if ($i < $keycount)
