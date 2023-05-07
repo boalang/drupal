@@ -22,7 +22,7 @@ function boa_job_download_src($jobId) {
 
 	$query = db_select('boa_jobs', 'r');
 	$query->fields('r', array('source'));
-	$query->addExpression('CHAR_LENGTH(source)', 'result_length');
+	$query->addExpression('LENGTH(source)', 'result_length');
 	$query->condition('id', $jobId);
 	$result = $query->execute();
 
