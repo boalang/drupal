@@ -156,7 +156,7 @@ function fakeRunning($record) {
 		return;
 
 	global $user;
-	if ($user !== null && $user->name == "paclab")
+	if ($user !== null && property_exists($user, 'name') && $user->name == "paclab")
 		return;
 
 	if ($record->compiler_status == 2 && $record->compile_end > time()) {
