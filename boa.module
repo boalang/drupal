@@ -200,6 +200,10 @@ function isValidJob($jobId) {
 }
 
 function invalidJob($jobId) {
+	if (boa_public_access($jobId)) {
+		drupal_goto("boa/job/public/$jobId");
+		drupal_exit();
+	}
 	drupal_set_message(t('Invalid job :jobid or this job does not belong to you.', array(':jobid' => $jobId)), 'error');
 	drupal_goto('boa/jobs');
 	drupal_exit();
@@ -332,9 +336,14 @@ function boa_job_running_access($jobId) {
 			($record->compiler_status == 2 && ($record->hadoop_status == 0 || $record->hadoop_status == 1));
 }
 
-function boa_user_access() {
-	global $user;
-	return is_boa_user() || is_boa_demo() || is_boa_admin();
+function boa_user_access($jobId = null) {
+	if (is_boa_user() || is_boa_demo() || is_boa_admin())
+		return true;
+	if ($jobId !== null && boa_public_access($jobId)) {
+		drupal_goto("boa/job/public/$jobId");
+		drupal_exit();
+	}
+	return false;
 }
 
 /**
@@ -393,6 +402,7 @@ function boa_menu() {
 		'page callback' => 'boa_job',
 		'page arguments' => array(2),
 		'access callback' => 'boa_user_access',
+		'access arguments' => array(2),
 		'type' => MENU_CALLBACK,
 		'file' => 'job.inc',
 	);
