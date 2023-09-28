@@ -200,10 +200,6 @@ function isValidJob($jobId) {
 }
 
 function invalidJob($jobId) {
-	if (boa_public_access($jobId)) {
-		drupal_goto("boa/job/public/$jobId");
-		drupal_exit();
-	}
 	drupal_set_message(t('Invalid job :jobid or this job does not belong to you.', array(':jobid' => $jobId)), 'error');
 	drupal_goto('boa/jobs');
 	drupal_exit();
